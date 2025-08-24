@@ -1,9 +1,7 @@
 package com.example.calendar.Employee;
 
 import com.example.calendar.Employee.entities.Employee;
-import org.springframework.stereotype.Service;
 
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -14,15 +12,51 @@ public class EmployeeService {
 
     //Check min and max for both employee bounds FINISHED
     //May need to convert Strings into minute integers FINISHED
-    //Order meetings by nested list's-0 index
-    //Create a for loop to loop over meetings
+    //Order meetings by nested list's-0 index FINISHED
+    //Add meetings which account for the time between bounds and first/last meetings
+    //Create a for loop to loop over meetings FINISHED
     //Using the for loop create a new list of meeting availability
     //Create a condition to only add items > meeting duration
 
-    public void createEmployeesMeetingAvailability(Employee emp1, Employee emp2) { //ArrayList<Integer>
-        ArrayList<List<Integer>> empMeetingsAggregated = convertEmpHoursToMins(emp1);
-        empMeetingsAggregated.addAll(convertEmpHoursToMins(emp2));
-        System.out.println("empMeetingsAggregated: " + empMeetingsAggregated);
+    public void createEmployeesMeetingAvailability(Employee emp1, Employee emp2, int meetingDuration) { //ArrayList<Integer>
+        //Start and end bounds accounting for both employees
+        Integer startBound = Math.max(getTimeInMinutes(emp1.getBounds().get(0)), getTimeInMinutes(emp2.getBounds().get(0)));
+        Integer endBound = Math.min(getTimeInMinutes(emp1.getBounds().get(1)), getTimeInMinutes(emp2.getBounds().get(1)));
+
+        ArrayList<List<Integer>> empMeetingTimesAggregated = convertEmpHoursToMins(emp1);
+        empMeetingTimesAggregated.addAll(convertEmpHoursToMins(emp2));
+
+        //Sorting employee meetings aggregated
+        empMeetingTimesAggregated.sort(Comparator.comparing(nestedList -> nestedList.get(0)));
+        System.out.println("empMeetingsAggregated: " + empMeetingTimesAggregated);
+
+        //Get gaps in employees meetings
+        getMeetingGaps(empMeetingTimesAggregated, meetingDuration, startBound, endBound);
+    }
+
+    // List of the meetings in minute format, meeting duration
+    public ArrayList<List<Integer>> getMeetingGaps(ArrayList<List<Integer>> aggregatedMeetings, Integer meetingDuration, Integer startBound, Integer endBound) {
+        ArrayList<List<Integer>> possibleMeetingTimes = new ArrayList<>();
+        //Between start bound and first meeting
+        if(aggregatedMeetings.get(0).get(0) - startBound >= meetingDuration) {
+            possibleMeetingTimes.add(Arrays.asList(startBound, aggregatedMeetings.get(0).get(0)));
+        }
+
+        for(int i = 0; i < aggregatedMeetings.size() - 1; i++) {
+            if(aggregatedMeetings.get(i + 1).get(0) - aggregatedMeetings.get(i).get(1) >= meetingDuration) {
+                possibleMeetingTimes.add(Arrays.asList(aggregatedMeetings.get(i).get(1), aggregatedMeetings.get(i + 1).get(0)));
+            }
+        }
+
+        //Between last meeting and end bound
+        if(aggregatedMeetings.get(aggregatedMeetings.size() - 1).get(1) + meetingDuration <= endBound) {
+            possibleMeetingTimes.add(Arrays.asList(aggregatedMeetings.get(aggregatedMeetings.size() - 1).get(1), endBound));
+        }
+
+        System.out.println(possibleMeetingTimes);
+        return possibleMeetingTimes;
+    }
+
     public ArrayList<List<Integer>> convertEmpHoursToMins(Employee emp) {
         ArrayList<List<Integer>> empMeetingsAggregated = new ArrayList<>();
         List<List<String>> empMeetings = emp.getMeetings();
