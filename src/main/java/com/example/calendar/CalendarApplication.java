@@ -33,12 +33,12 @@ public class CalendarApplication {
 		Employee employee1 = new Employee("Christopher", employee1Meetings, employee1Bounds);
 		Employee employee2 = new Employee("James", employee2Meetings, employee2Bounds);
 
-		int meetingDuration = 70;
+		int meetingDuration = 30;
 
 		System.out.println("Application working");
 		System.out.println(employee1);
 		System.out.println(employee2);
-		employeeService.createEmployeesMeetingAvailability(employee1, employee2, meetingDuration);
+		employeeService.getEmployeesMeetingAvailability(employee1, employee2, meetingDuration);
 	}
 
 }
