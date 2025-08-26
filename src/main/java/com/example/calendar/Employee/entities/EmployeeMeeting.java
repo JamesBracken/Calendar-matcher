@@ -8,7 +8,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "employeeMeetings")
-public class EmployeeMeetings {
+public class EmployeeMeeting {
     //May want to expand to include Dates
 
     //Name
@@ -20,7 +20,7 @@ public class EmployeeMeetings {
     //Daily bounds
     private List<String> bounds;
 
-    public EmployeeMeetings() {
+    public EmployeeMeeting() {
     }
 
     public List<String> getBounds() {
@@ -31,7 +31,7 @@ public class EmployeeMeetings {
         this.bounds = bounds;
     }
 
-    public EmployeeMeetings(String name, ArrayList<List<String>> meetings, List<String> bounds) {
+    public EmployeeMeeting(String name, ArrayList<List<String>> meetings, List<String> bounds) {
         this.name = name;
         this.meetingTimes = meetings;
         this.bounds = bounds;

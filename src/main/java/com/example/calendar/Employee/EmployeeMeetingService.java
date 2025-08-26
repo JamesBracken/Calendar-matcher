@@ -1,25 +1,15 @@
 package com.example.calendar.Employee;
 
-import com.example.calendar.Employee.entities.EmployeeMeetings;
+import com.example.calendar.Employee.entities.EmployeeMeeting;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
-//@Service
-public class EmployeeService {
+public class EmployeeMeetingService {
 
-    //Check min and max for both employee bounds FINISHED
-    //May need to convert Strings into minute integers FINISHED
-    //Order meetings by nested list's-0 index FINISHED
-    //Add meetings which account for the time between bounds and first/last meetings
-    //Create a for loop to loop over meetings FINISHED
-    //Using the for loop create a new list of meeting availability FINISHED
-    //Create a condition to only add items > meeting duration FINISHED
-    //Return a list of the available meeting times converted back into strings FINISHED
-
-    public ArrayList<List<String>> getEmployeesMeetingAvailability(EmployeeMeetings emp1Meetings, EmployeeMeetings emp2Meetings, int meetingDuration) { //ArrayList<Integer>
+    public ArrayList<List<String>> getEmployeesMeetingAvailability(EmployeeMeeting emp1Meetings, EmployeeMeeting emp2Meetings, int meetingDuration) {
         //Start and end bounds accounting for both employees
         Integer startBound = Math.max(getTimeInMinutes(emp1Meetings.getBounds().get(0)), getTimeInMinutes(emp2Meetings.getBounds().get(0)));
         Integer endBound = Math.min(getTimeInMinutes(emp1Meetings.getBounds().get(1)), getTimeInMinutes(emp2Meetings.getBounds().get(1)));
@@ -35,17 +25,16 @@ public class EmployeeService {
         ArrayList<List<Integer>> possibleMeetingTimes = getMeetingGaps(empMeetingTimesAggregated, meetingDuration, startBound, endBound);
 
         //Convert meeting times back into string format
-//        convertListOfMinsToTimeFormat(possibleMeetingTimes);
-        System.out.println("conertedListOfMinsToTimeFormat: " + convertListOfMinsToTimeFormat(possibleMeetingTimes));
+        System.out.println("convertedListOfMinsToTimeFormat: " + convertListOfMinsToTimeFormat(possibleMeetingTimes));
         return convertListOfMinsToTimeFormat(possibleMeetingTimes);
     }
 
     //Converts integer format time to String formatted times
     public ArrayList<List<String>> convertListOfMinsToTimeFormat(ArrayList<List<Integer>> meetingTimes) {
         ArrayList<List<String>> convertedList = new ArrayList<>();
-        for(int i = 0; i < meetingTimes.size(); i++) {
+        for (List<Integer> meetingTime : meetingTimes) {
             List<String> newList = new ArrayList<>();
-            for(Integer meetingMinutes: meetingTimes.get(i)) {
+            for (Integer meetingMinutes : meetingTime) {
                 int hours = (int) Math.floor(meetingMinutes / 60);
                 int extraMinutes = meetingMinutes % 60;
                 newList.add(String.format("%02d:%02d", hours, extraMinutes));
@@ -62,13 +51,11 @@ public class EmployeeService {
         if(aggregatedMeetings.get(0).get(0) - startBound >= meetingDuration) {
             possibleMeetingTimes.add(Arrays.asList(startBound, aggregatedMeetings.get(0).get(0)));
         }
-
         for(int i = 0; i < aggregatedMeetings.size() - 1; i++) {
             if(aggregatedMeetings.get(i + 1).get(0) - aggregatedMeetings.get(i).get(1) >= meetingDuration) {
                 possibleMeetingTimes.add(Arrays.asList(aggregatedMeetings.get(i).get(1), aggregatedMeetings.get(i + 1).get(0)));
             }
         }
-
         //Between last meeting and end bound
         if(aggregatedMeetings.get(aggregatedMeetings.size() - 1).get(1) + meetingDuration <= endBound) {
             possibleMeetingTimes.add(Arrays.asList(aggregatedMeetings.get(aggregatedMeetings.size() - 1).get(1), endBound));
@@ -76,12 +63,12 @@ public class EmployeeService {
         return possibleMeetingTimes;
     }
 
-    public ArrayList<List<Integer>> convertEmpMeetingHoursToMins(EmployeeMeetings empMeetings) {
+    public ArrayList<List<Integer>> convertEmpMeetingHoursToMins(EmployeeMeeting empMeetings) {
         ArrayList<List<Integer>> empMeetingsAggregated = new ArrayList<>();
         List<List<String>> empMeetingTimes = empMeetings.getMeetingTimes();
-        for (int i = 0; i < empMeetingTimes.size(); i++) {
+            for (List<String> empMeetingTime : empMeetingTimes) {
             List<Integer> newList = new ArrayList<>();
-            for (String time : empMeetingTimes.get(i)) {
+            for (String time : empMeetingTime) {
                 newList.add(getTimeInMinutes(time));
             }
             empMeetingsAggregated.add(newList);
@@ -96,5 +83,4 @@ public class EmployeeService {
         minutes += Integer.parseInt(timeList[1]);
         return minutes;
     }
-
 }
