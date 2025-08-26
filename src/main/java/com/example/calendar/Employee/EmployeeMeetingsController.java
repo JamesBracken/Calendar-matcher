@@ -1,4 +1,4 @@
 package com.example.calendar.Employee;
 
-public class EmployeeController {
+public class EmployeeMeetingsController {
 }

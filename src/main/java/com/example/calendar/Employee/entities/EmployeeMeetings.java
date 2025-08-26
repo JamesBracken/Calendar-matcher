@@ -7,20 +7,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "employees")
-public class Employee {
+@Table(name = "employeeMeetings")
+public class EmployeeMeetings {
     //May want to expand to include Dates
 
     //Name
     private String name;
 
     //List of meetings
-    private List<List<String>> meetings;
+    private List<List<String>> meetingTimes;
 
     //Daily bounds
     private List<String> bounds;
 
-    public Employee() {
+    public EmployeeMeetings() {
     }
 
     public List<String> getBounds() {
@@ -31,9 +31,9 @@ public class Employee {
         this.bounds = bounds;
     }
 
-    public Employee(String name, ArrayList<List<String>> meetings, List<String> bounds) {
+    public EmployeeMeetings(String name, ArrayList<List<String>> meetings, List<String> bounds) {
         this.name = name;
-        this.meetings = meetings;
+        this.meetingTimes = meetings;
         this.bounds = bounds;
     }
 
@@ -45,19 +45,19 @@ public class Employee {
         this.name = name;
     }
 
-    public List<List<String>> getMeetings() {
-        return meetings;
+    public List<List<String>> getMeetingTimes() {
+        return meetingTimes;
     }
 
-    public void setMeetings(List<List<String>> meetings) {
-        this.meetings = meetings;
+    public void setMeetingTimes(List<List<String>> meetingTimes) {
+        this.meetingTimes = meetingTimes;
     }
 
     @Override
     public String toString() {
         return "Employee{" +
                 "name='" + name + '\'' +
-                ", meetings=" + meetings +
+                ", meetings=" + meetingTimes +
                 '}';
     }
 }

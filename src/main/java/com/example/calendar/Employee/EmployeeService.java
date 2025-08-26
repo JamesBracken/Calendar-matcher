@@ -1,6 +1,6 @@
 package com.example.calendar.Employee;
 
-import com.example.calendar.Employee.entities.Employee;
+import com.example.calendar.Employee.entities.EmployeeMeetings;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,13 +19,13 @@ public class EmployeeService {
     //Create a condition to only add items > meeting duration FINISHED
     //Return a list of the available meeting times converted back into strings FINISHED
 
-    public ArrayList<List<String>> getEmployeesMeetingAvailability(Employee emp1, Employee emp2, int meetingDuration) { //ArrayList<Integer>
+    public ArrayList<List<String>> getEmployeesMeetingAvailability(EmployeeMeetings emp1Meetings, EmployeeMeetings emp2Meetings, int meetingDuration) { //ArrayList<Integer>
         //Start and end bounds accounting for both employees
-        Integer startBound = Math.max(getTimeInMinutes(emp1.getBounds().get(0)), getTimeInMinutes(emp2.getBounds().get(0)));
-        Integer endBound = Math.min(getTimeInMinutes(emp1.getBounds().get(1)), getTimeInMinutes(emp2.getBounds().get(1)));
+        Integer startBound = Math.max(getTimeInMinutes(emp1Meetings.getBounds().get(0)), getTimeInMinutes(emp2Meetings.getBounds().get(0)));
+        Integer endBound = Math.min(getTimeInMinutes(emp1Meetings.getBounds().get(1)), getTimeInMinutes(emp2Meetings.getBounds().get(1)));
 
-        ArrayList<List<Integer>> empMeetingTimesAggregated = convertEmpHoursToMins(emp1);
-        empMeetingTimesAggregated.addAll(convertEmpHoursToMins(emp2));
+        ArrayList<List<Integer>> empMeetingTimesAggregated = convertEmpMeetingHoursToMins(emp1Meetings);
+        empMeetingTimesAggregated.addAll(convertEmpMeetingHoursToMins(emp2Meetings));
 
         //Sorting employee meetings aggregated
         empMeetingTimesAggregated.sort(Comparator.comparing(nestedList -> nestedList.get(0)));
@@ -76,12 +76,12 @@ public class EmployeeService {
         return possibleMeetingTimes;
     }
 
-    public ArrayList<List<Integer>> convertEmpHoursToMins(Employee emp) {
+    public ArrayList<List<Integer>> convertEmpMeetingHoursToMins(EmployeeMeetings empMeetings) {
         ArrayList<List<Integer>> empMeetingsAggregated = new ArrayList<>();
-        List<List<String>> empMeetings = emp.getMeetings();
-        for (int i = 0; i < emp.getMeetings().size(); i++) {
+        List<List<String>> empMeetingTimes = empMeetings.getMeetingTimes();
+        for (int i = 0; i < empMeetingTimes.size(); i++) {
             List<Integer> newList = new ArrayList<>();
-            for (String time : empMeetings.get(i)) {
+            for (String time : empMeetingTimes.get(i)) {
                 newList.add(getTimeInMinutes(time));
             }
             empMeetingsAggregated.add(newList);
